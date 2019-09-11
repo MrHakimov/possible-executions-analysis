@@ -23,3 +23,5 @@ sourceSets["main"].withConvention(KotlinSourceSet::class) {
 application {
     mainClassName = "PossibleExecutionsVerifierKt"
 }
+
+tasks["build"].dependsOn("run")
