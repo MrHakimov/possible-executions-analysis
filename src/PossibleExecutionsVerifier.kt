@@ -1,4 +1,5 @@
 import java.io.*
+import java.util.*
 
 const val SOLUTION_FILE_NAME = "solution.txt"
 val STATE_REGEX = Regex("\\[P([1-4]),Q([1-4]),([01]),([01])]")
@@ -24,7 +25,9 @@ fun main() {
         if (s !in states) states[s] = emptySet()
     }
     val initial = State(1, 1, 0, 0)
+    // check initial state
     require(initial in states) { "Must contain transition from initial state $initial" }
+    // check complete transitions out of each state
     for ((from, tos) in states) {
         val expected = mutableSetOf<State>()
         from.moveP().let { expected += it }
@@ -33,6 +36,18 @@ fun main() {
         for (e in expected) {
             require(e in tos) { "Missing transition from state $from" }
         }
+    }
+    // check reachability of all states
+    val queue = ArrayDeque<State>()
+    val reached = HashSet<State>()
+    fun mark(state: State) { if (reached.add(state)) queue += state }
+    mark(initial)
+    while (!queue.isEmpty()) {
+        val from = queue.removeFirst()
+        for (to in states[from]!!) mark(to)
+    }
+    for (state in states.keys) {
+        require(state in reached) { "State $state in never reached from the initial state" }
     }
 }
 
