@@ -8,13 +8,17 @@ fun main() {
     val transitions = mutableSetOf<Transition>()
     File(SOLUTION_FILE_NAME).readLines().forEachIndexed { index, line ->
         val trim = line.substringBefore('#').trim()
-        try {
-            if (trim.isNotEmpty()) {
-                val t = parseTransition(trim)
-                require(transitions.add(t)) { "Duplicate transition $t" }
+        if (index == 0) {
+            println("Validating $SOLUTION_FILE_NAME: $trim")
+        } else {
+            try {
+                if (trim.isNotEmpty()) {
+                    val t = parseTransition(trim)
+                    require(transitions.add(t)) { "Duplicate transition $t" }
+                }
+            } catch (e: IllegalArgumentException) {
+                error("At $SOLUTION_FILE_NAME:${index + 1}: ${e.message}")
             }
-        } catch (e: IllegalArgumentException) {
-            error("At $SOLUTION_FILE_NAME:${index + 1}: ${e.message}")
         }
     }
     val states = transitions
