@@ -9,6 +9,7 @@ fun main() {
     File(SOLUTION_FILE_NAME).readLines().forEachIndexed { index, line ->
         val trim = line.substringBefore('#').trim()
         if (index == 0) {
+            require(trim != "<Last-Name> <First-Name>") { "The first line must be filled in with name" }
             println("Validating $SOLUTION_FILE_NAME: $trim")
         } else {
             try {
